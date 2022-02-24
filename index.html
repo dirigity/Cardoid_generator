@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardoid_generator</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="text/javascript" src="node_modules\dat.gui\build\dat.gui.min.js"></script>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let params = {
+            "multiplier": 2,
+            "modulus": 10,
+            "mul++": () => {
+                out_mul_add()
+            },
+            "mul--": () => {
+                out_mul_sub()
+            },
+            "mod++": () => {
+                out_mod_add()
+            },
+            "mod--": () => {
+                out_mod_sub()
+            },
+        }
+
+        function out_mul_add() {
+            params.multiplier++;
+            redraw()
+            a.updateDisplay();
+
+
+        }
+        function out_mul_sub() {
+            params.multiplier--;
+            redraw();
+            a.updateDisplay();
+
+        }
+        function out_mod_add() {
+            params.modulus++; redraw();
+            b.updateDisplay();
+
+        }
+        function out_mod_sub() {
+            params.modulus--; redraw();
+            b.updateDisplay();
+
+        }
+
+
+        const gui = new dat.GUI();
+
+        console.log(gui)
+
+        gui.remember(params);
+
+        let a = gui.add(params, 'multiplier').step(1).min(1).max(1000).onChange(redraw);
+        gui.add(params, 'mul++');
+        gui.add(params, 'mul--');
+
+        let b = gui.add(params, 'modulus').step(1).min(2).max(1000).onChange(redraw);
+        gui.add(params, 'mod++');
+        gui.add(params, 'mod--');
+
+
+        function redraw() {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, innerWidth, innerHeight);
+
+            const centerX = innerWidth / 2;
+            const centerY = innerHeight / 2;
+            const margin_coef = 2.2;
+            const r = Math.min(innerWidth / margin_coef, innerHeight / margin_coef)
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, 2 * Math.PI, false);
+            if (params.modulus > 40) {
+                ctx.lineWidth = 1;
+
+            } else {
+                ctx.lineWidth = 1 + 100 / params.modulus;
+
+            }
+            ctx.strokeStyle = "rgba(255, 255, 255, 1)";
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(255, 255, 255, " + 0.3 + ")";
+
+            for (let i = 0; i < params.modulus; i++) {
+                ctx.beginPath();
+                ctx.moveTo(...pointAt(i, params.modulus, centerX, centerY, r));
+                ctx.lineTo(...pointAt(i * params.multiplier, params.modulus, centerX, centerY, r));
+                ctx.stroke();
+            }
+        }
+
+        function pointAt(i, m, x, y, r) {
+
+            return [Math.cos(i / m * 2 * Math.PI) * r + x, Math.sin(i / m * 2 * Math.PI) * r + y]
+        }
+
+        redraw()
+        const resize_canvas = () => {
+            canvas.height = innerHeight;
+            canvas.width = innerWidth;
+            redraw()
+        }
+        resize_canvas();
+        window.onresize = resize_canvas;
+
+
+    </script>
+</body>
+
+</html>

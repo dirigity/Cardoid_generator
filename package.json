@@ -1,0 +1,14 @@
+{
+  "name": "cardoid_generator",
+  "version": "1.0.0",
+  "description": "static web page inspired by [this video](https://www.youtube.com/watch?v=6ZrO90AI0c8&t=1589s)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dat.gui": "^0.7.9"
+  }
+}
